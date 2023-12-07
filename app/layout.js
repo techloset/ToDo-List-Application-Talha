@@ -1,6 +1,5 @@
-import { Inter } from 'next/font/google'
+import { AuthUserProvider } from './firebase/auth'
 import './globals.css'
-
 
 
 export const metadata = {
@@ -10,10 +9,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    
     <html lang="en">
+
       <body suppressHydrationWarning>
-      {/* <h1>jo har jga chahiye</h1> */}
-      {children}
+     {/* <AuthUserProvider> */}
+     {children}
+     {/* </AuthUserProvider> */}
       </body>
 
     </html>
