@@ -11,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body >
+      <body suppressHydrationWarning>
       {/* <h1>jo har jga chahiye</h1> */}
       {children}
       </body>
