@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { auth } from "../firebase/config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import Link from 'next/link';
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -16,6 +17,10 @@ const SignUp = () => {
       );
       const user = userCredential.user;
       console.log("User signed up:", user);
+      sessionStorage.setItem('user',true)
+
+      setEmail("");
+      setPassword("");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -26,7 +31,7 @@ const SignUp = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-10 rounded-lg shadow-xl w-96">
-        <h1 className="text-white text-2xl mb-5">Sign Up</h1>
+        <h1 className="text-white text-2xl mb-5">SignUp</h1>
         <input
           type="email"
           placeholder="Email"
@@ -47,6 +52,7 @@ const SignUp = () => {
         >
           Sign Up
         </button>
+        <p className="text-white mt-6">Already have an account? <Link href="/signnIn"><span className="text-sky-400">Login Here</span></Link></p>
       </div>
     </div>
   );
