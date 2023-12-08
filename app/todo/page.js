@@ -1,34 +1,29 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import {
-  collection,
-  addDoc,
-  query,
-  where,
-  getDocs,
-  deleteDoc,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
-import { db } from "../firebase/config";
-
+// Import necessary modules and styles
+'use client'
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../firebase/auth";
 import Loader from "../Component/loader";
-import Link from "next/link";
+import { db } from "../firebase/config";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 
-const page = () => {
+const Page = () => {
   const [todoInput, setTodoInput] = useState("");
-
-  // for docment we fetch
   const [todo, setTodo] = useState([]);
   const { authUser, isLoading, signOut } = useAuth();
-
   const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && !authUser) {
-      router.push("/signnIn");
+      router.push("/signIn");
     }
     if (!!authUser) {
       fetchTodos(authUser.uid);
@@ -36,14 +31,8 @@ const page = () => {
   }, [authUser, isLoading]);
 
   const handleSubmit = async () => {
-    // let studentTodo = {
-    //   content: todoInput,
-    //   owner: authUser.uid,
-    // };
-
     try {
       const docRef = await addDoc(collection(db, "todo"), {
-        // studentTodo,
         content: todoInput,
         owner: authUser.uid,
         completed: false,
@@ -62,7 +51,6 @@ const page = () => {
       const querySnapshot = await getDocs(q);
       let data = [];
       querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
         console.log("user id ???", doc.id, " => ", doc.data());
         data.push({ ...doc.data(), id: doc.id });
         setTodo(data);
@@ -75,41 +63,46 @@ const page = () => {
   const onDeleteHandler = async (docId) => {
     try {
       await deleteDoc(doc(db, "todo", docId));
-      // After deleting the todo, fetch all todos for the current user and update the state with the new data.
       fetchTodos(authUser.uid);
-     
     } catch (error) {
-      console.error("An error occured", error);
+      console.error("An error occurred", error);
     }
   };
 
   return !authUser ? (
     <Loader />
   ) : (
-    <div>
-      <h1>Todo form</h1>
-      <input
-        type="text"
-        onChange={(e) => setTodoInput(e.target.value)}
-        value={todoInput}
-        placeholder="Enter your Todo Here"
-        className='bg-gray-50 border m-3 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required'
-      />
-      <button
-        onClick={handleSubmit}
-        className="border bg-gray-50 border-gray-300"
-      >
-        Submit
-      </button>
+    <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h1 className="text-3xl font-semibold mb-6 text-gray-800">Todo Form</h1>
+      <div className="flex flex-wrap items-center">
+        <input
+          type="text"
+          onChange={(e) => setTodoInput(e.target.value)}
+          value={todoInput}
+          placeholder="Enter your Todo Here"
+          className="w-full md:w-3/4 bg-gray-100 border border-gray-300 text-gray-800 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 mb-4 md:mb-0"
+          required
+        />
+        <button
+          onClick={handleSubmit}
+          className="w-full md:w-1/4 bg-blue-500 text-white py-2 px-4 rounded-md text-sm md:ml-2.5  md:mt-6 mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-600"
+        >
+          Submit
+        </button>
+      </div>
 
       {todo.map((item, index) => {
-        // console.log("todoooo iddd delete",item.id);
         return (
-          <div key={index.id}>
-            <h1>{item.content}</h1>
+          <div key={item.id} className="mt-4 flex items-center justify-between">
+            <input
+              type="text"
+              value={item.content}
+              readOnly
+              className="w-full bg-gray-200 border border-gray-300 text-gray-800 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 mb-2"
+            />
             <button
               onClick={() => onDeleteHandler(item.id)}
-              className="focus:outline-none text-white bg-red-700 hover:bg-red-800  focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+              className="focus:outline-none text-white bg-red-500 hover:bg-red-600 focus:ring-red-300 font-medium rounded-md text-sm px-4 py-2"
             >
               Delete
             </button>
@@ -118,7 +111,7 @@ const page = () => {
       })}
       <button
         onClick={signOut}
-        className="border bg-gray-50 border-gray-300 ml-3"
+        className="border border-gray-300 py-2 px-4 mt-4 text-gray-800 rounded-md text-sm"
       >
         Sign Out
       </button>
@@ -126,4 +119,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
