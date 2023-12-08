@@ -1,15 +1,29 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { auth } from "../firebase/config";
 import { createUserWithEmailAndPassword,  updateProfile, } from "firebase/auth";
 import Link from "next/link";
+
+import { useRouter } from 'next/navigation'
+import { useAuth } from "../firebase/auth";
+import Loader from "../Component/loader";
+
 
 const SignUp = () => {
   const [username, setUsername] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState(null);
+  const { authUser, isLoading,setAuthUser } = useAuth(); 
+
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && authUser) {
+      router.push("/todo"); 
+    }
+  }, [authUser, isLoading]);
 
   const handleSignUp = async () => {
     if (!email || !password || !username) return;  
@@ -22,8 +36,14 @@ const SignUp = () => {
       await updateProfile(auth.currentUser, {
         displayName: username,
     });
-      const user = userCredential.user;
-      console.log("User signed up:", user);
+    setAuthUser({
+      uid:userCredential.uid,
+      email:userCredential.email,
+      username,
+
+    })
+      // const user = userCredential.user;
+      // console.log("User signed up:", user);
       // sessionStorage.setItem('user',true)
       setUsername("");
       setEmail("");
@@ -36,7 +56,7 @@ const SignUp = () => {
     }
   };
 
-  return (
+  return isLoading || (!isLoading && authUser) ? (<Loader/>) : (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-10 rounded-lg shadow-xl w-96">
         <h1 className="text-white text-2xl mb-5">SignUp</h1>

@@ -10,7 +10,7 @@ const AuthUserContext = createContext({
 });
 
 export default function useFirebaseAuth() {
-  
+
   const [authUser, setAuthUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -55,10 +55,10 @@ export default function useFirebaseAuth() {
   };
 }
 
-export const AuthUserProvider = ({ childeren }) => {
+export const AuthUserProvider = ({ children }) => {
   const auth = useFirebaseAuth();
   return (
-    <AuthUserContext.Provider value={auth}>{childeren}</AuthUserContext.Provider>
+    <AuthUserContext.Provider value={auth}>{children}</AuthUserContext.Provider>
   );
 };
 

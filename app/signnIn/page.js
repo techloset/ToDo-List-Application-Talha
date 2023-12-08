@@ -3,28 +3,23 @@ import { useEffect, useState } from "react";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
-// import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation'
 import { auth } from "../firebase/config";
-// import { useAuth } from "../firebase/auth";
-
+import { useAuth } from "../firebase/auth";
+import Loader from "../Component/loader";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-// const {authUser,isLoading} = useAuth()
+  const { authUser, isLoading } = useAuth();
 
+    const router = useRouter();
 
-
-
-//   const router = useRouter();
-
-
-//   useEffect(() => {
-//    if (!isLoading && authUser) {
-//     router.push('/')
-//    }
-//   }, [authUser,isLoading])
-  
+  useEffect(() => {
+    if (!isLoading && authUser) {
+      router.push("/todo"); 
+    }
+  }, [authUser, isLoading]);
 
   const handleSignIn = async () => {
     if (!email || !password) return;
@@ -40,7 +35,6 @@ const SignIn = () => {
       setEmail("");
       setPassword("");
       // router.push("/");
-
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -48,7 +42,7 @@ const SignIn = () => {
     }
   };
 
-  return (
+  return isLoading || (!isLoading && authUser) ? (<Loader/>) : (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-10 rounded-lg shadow-xl w-96">
         <h1 className="text-white text-2xl mb-5">Sign In</h1>
