@@ -21,7 +21,7 @@ const SignUp = () => {
 
   useEffect(() => {
     if (!isLoading && authUser) {
-      router.push("/todo"); 
+      router.push("/"); 
     }
   }, [authUser, isLoading]);
 

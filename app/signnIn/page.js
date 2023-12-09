@@ -17,7 +17,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (!isLoading && authUser) {
-      router.push("/todo"); 
+      router.push("/"); 
     }
   }, [authUser, isLoading]);
 

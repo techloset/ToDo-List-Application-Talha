@@ -1,125 +1,177 @@
-// "use client";
-// import { useEffect, useState } from "react";
-// import {
-//   collection,
-//   getDocs,
-//   query,
-//   where,
-//   deleteDoc,
-//   updateDoc,
-//   doc,
-// } from "firebase/firestore";
-// import { db } from "./firebase/config";
-// import { useAuthState } from "react-firebase-hooks/auth";
-// import { auth } from "./firebase/config";
-// import { useRouter } from "next/navigation";
-// import { signOut } from "firebase/auth";
+// Import necessary modules and styles
+'use client'
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "./firebase/auth";
+import Loader from "./Component/loader";
+import { db } from "./firebase/config";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 
-// export default function Home() {
-//   const [user] = useAuthState(auth);
-//   const router = useRouter();
-//   const userSession = sessionStorage.getItem("user");
+const Page = () => {
+  const [todoInput, setTodoInput] = useState("");
+  const [todo, setTodo] = useState([]);
+  const { authUser, isLoading, signOut } = useAuth();
+  const router = useRouter();
 
-//   if (!user && !userSession) {
-//     router.push("/signUp");
-//   }
-//   console.log("userrs", user);
+  const [editMode, setEditMode] = useState(null);
 
-//   const [todoStudent, setTodoStudent] = useState([]);
+  useEffect(() => {
+    if (!isLoading && !authUser) {
+      router.push("/signnIn");
+    }
+    if (!!authUser) {
+      fetchTodos(authUser.uid);
+    }
+  }, [authUser, isLoading]);
 
-//   const getDoc = async () => {
-//     try {
-//       const collectionName = collection(db, "students");
-//       const getAllStudents = await getDocs(collectionName);
+  const handleSubmit = async () => {
+    try {
+      if (editMode !== null) {
+        // Update existing todo
+        await updateDoc(doc(db, "todo", todo[editMode].id), {
+          content: todoInput,
+        });
+        setEditMode(null);
+      } else {
+        // Add new todo
+        const docRef = await addDoc(collection(db, "todo"), {
+          content: todoInput,
+          owner: authUser.uid,
+          completed: false,
+        });
+        console.log("user todo id ", docRef.id);
+      }
 
-//       const studentsData = [];
+      fetchTodos(authUser.uid);
+      setTodoInput("");
+    } catch (e) {
+      console.error("Error updating/adding document: ", e);
+    }
+  };
 
-//       getAllStudents.forEach((doc) => {
-//         studentsData.push({
-//           id: doc.id,
-//           ...doc.data(),
-//         });
-//       });
+  const fetchTodos = async (uid) => {
+    try {
+      const q = query(collection(db, "todo"), where("owner", "==", uid));
+      const querySnapshot = await getDocs(q);
+      let data = [];
+      querySnapshot.forEach((doc) => {
+        console.log("user id ???", doc.id, " => ", doc.data());
+        data.push({ ...doc.data(), id: doc.id });
+        setTodo(data);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-//       setTodoStudent(studentsData);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
+  const onDeleteHandler = async (docId) => {
+    try {
+      await deleteDoc(doc(db, "todo", docId));
+      fetchTodos(authUser.uid);
+    } catch (error) {
+      console.error("An error occurred", error);
+    }
+  };
 
-//   const onDeleteHandler = async (id) => {
-//     const DeleteDoc = doc(db, "students", id);
-//     await deleteDoc(DeleteDoc);
+  const onEditHandler = (index) => {
+    setEditMode(index);
+    setTodoInput(todo[index].content);
+  };
 
-//     const newStudents = todoStudent.filter(
-//       (studentFilter) => id !== studentFilter.id
-//     );
+  return !authUser ? (
+    <Loader />
+  ) : (
+    <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h1 className="text-3xl font-semibold mb-6 text-gray-800">Todo Form</h1>
+      <div className="flex flex-wrap items-center">
+        <input
+          type="text"
+          onChange={(e) => setTodoInput(e.target.value)}
+          value={todoInput}
+          placeholder="Enter your Todo Here"
+          className="w-full md:w-3/4 bg-gray-100 border border-gray-300 text-gray-800 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 mb-4 md:mb-0"
+          required
+        />
+        <button
+          onClick={handleSubmit}
+          className="w-full md:w-1/4 bg-blue-500 text-white py-2 px-4 rounded-md text-sm md:ml-2.5 mt-4 md:mt-0 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-600"
+        >
+          {editMode !== null ? "Update" : "Submit"}
+        </button>
+      </div>
 
-//     setTodoStudent(newStudents);
-//   };
+      {todo.map((item, index) => {
+        return (
+          <div key={item.id} className="mt-4 flex items-center justify-between">
+            {editMode === index ? (
+              <input
+                type="text"
+                value={todoInput}
+                onChange={(e) => setTodoInput(e.target.value)}
+                className="w-full bg-gray-200 border border-gray-300 text-gray-800 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 mb-2"
+              />
+            ) : (
+              <input
+                type="text"
+                value={item.content}
+                readOnly
+                className="w-full bg-gray-200 border border-gray-300 text-gray-800 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block p-2.5 mb-2"
+              />
+            )}
 
-//   useEffect(() => {
-//     getDoc();
-//   }, []);
+            <div>
+              {editMode === index ? (
+                <>
+                  <button
+                    onClick={() => setEditMode(null)}
+                    className="focus:outline-none text-gray-800 bg-gray-300 hover:bg-gray-400 focus:ring focus:border-gray-400 font-medium rounded-md text-sm px-4 py-2 mr-2"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleSubmit()}
+                    className="focus:outline-none text-white bg-green-500 hover:bg-green-600 focus:ring-green-300 font-medium rounded-md text-sm px-4 py-2"
+                  >
+                    Save
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => onEditHandler(index)}
+                    className="focus:outline-none text-white bg-gray-800 hover:bg-gray-900 focus:ring focus:border-gray-900 font-medium rounded-md text-sm px-4 py-2 mr-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => onDeleteHandler(item.id)}
+                    className="focus:outline-none text-white bg-red-500 hover:bg-red-600 focus:ring-red-300 font-medium rounded-md text-sm px-4 py-2"
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        );
+      })}
+      <button
+        onClick={signOut}
+        className="border border-gray-300 py-2 px-4 mt-4 text-gray-800 rounded-md text-sm"
+      >
+        Sign Out
+      </button>
+    </div>
+  );
+};
 
-//   return (
-//     <div className="">
-//       <h1>list of todo</h1>
-
-//       <table>
-//         <tr className="">
-//           <td className="">Name</td>
-//           <td>LastName</td>
-//           <td>Email</td>
-//           <td>Delete</td>
-//         </tr>
-
-//         {todoStudent.length === 0 ? (
-//           <p>No data available</p>
-//         ) : (
-//           todoStudent.map((student, item) => {
-//             // console.log("student", student);
-//             return (
-//               <tr key={student.item}>
-//                 {/* <td>{student.id}</td> */}
-//                 <td>{student.student.name}</td>
-//                 <td>{student.student.lastName}</td>
-//                 <td>{student.student.subject}</td>
-//                 <td>
-//                   <button
-//                     onClick={() => onDeleteHandler(student.id)}
-//                     className="focus:outline-none text-white bg-red-700 hover:bg-red-800  focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-//                   >
-//                     Delete
-//                   </button>
-//                 </td>
-          
-//               </tr>
-//             );
-//           })
-//         )}
-//       </table>
-
-//       <button
-//         onClick={() => {
-//           signOut(auth);
-//           sessionStorage.removeItem("user");
-//         }}
-//       >
-//         logout
-//       </button>
-//     </div>
-//   );
-// }
-
-
-import React from 'react'
-// import { AuthUserProvider } from './firebase/auth'
-
-const page = () => {
-  return (
-    <div>page</div>
-  )
-}
-
-export default page
+export default Page;
