@@ -1,4 +1,3 @@
-// TodoItem.js
 import React from "react";
 
 const TodoItem = ({ item, index, editMode,todoInput, onDeleteHandler, onEditHandler, setTodoInput, handleSubmit }) => {
@@ -24,7 +23,7 @@ const TodoItem = ({ item, index, editMode,todoInput, onDeleteHandler, onEditHand
         {editMode === index ? (
           <>
             <button
-              onClick={() => onEditHandler(null)} // This line should be onClick={() => onEditHandler(null)}
+              onClick={() => onEditHandler(null)} 
               className="focus:outline-none text-gray-800 bg-gray-300 hover:bg-gray-400 focus:ring focus:border-gray-400 font-medium rounded-md text-sm px-4 py-2 mr-2"
             >
               Cancel
@@ -40,7 +39,7 @@ const TodoItem = ({ item, index, editMode,todoInput, onDeleteHandler, onEditHand
           <>
             <button
               onClick={() => onEditHandler(index)}
-              className="focus:outline-none text-white bg-gray-800 hover:bg-gray-900 focus:ring focus:border-gray-900 font-medium rounded-md text-sm px-4 py-2 mr-2"
+              className="focus:outline-none text-white  bg-gray-800 hover:bg-gray-900 focus:ring focus:border-gray-900 font-medium rounded-md text-sm px-4 py-2 mr-2"
             >
               Edit
             </button>

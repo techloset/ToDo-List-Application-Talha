@@ -20,8 +20,8 @@ const SignUp = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && authUser) {
-      router.push("/"); 
+    if (authUser) {
+      // router.push("/signnIn"); 
     }
   }, [authUser, isLoading]);
 
@@ -33,26 +33,26 @@ const SignUp = () => {
         email,
         password
       );
+      console.log("userCredential",userCredential);
       await updateProfile(auth.currentUser, {
         displayName: username,
     });
-    setAuthUser({
-      uid:userCredential.uid,
-      email:userCredential.email,
-      username,
-
-    })
-      // const user = userCredential.user;
-      // console.log("User signed up:", user);
-      // sessionStorage.setItem('user',true)
+    // setAuthUser({
+    //   uid:userCredential.user.uid,
+    //   email:userCredential.user.email,
+    //   username,
+    // })
+     
       setUsername("");
       setEmail("");
       setPassword("");
+      router.push("/signnIn"); 
+
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
       setError(errorMessage);
-      console.error("Error signing up:", errorCode, errorMessage);
+      // console.error("Error signing up:", errorCode, errorMessage);
     }
   };
 
@@ -66,6 +66,7 @@ const SignUp = () => {
             type="text"
             placeholder="Enter Name"
             value={username}
+            required
             onChange={(e) => setUsername(e.target.value)}
             className="w-full p-3 mb-4 bg-gray-700 rounded outline-none text-white placeholder-gray-500"
           />
@@ -73,6 +74,7 @@ const SignUp = () => {
             type="email"
             placeholder="abc@gmail.com"
             value={email}
+            required
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 mb-4 bg-gray-700 rounded outline-none text-white placeholder-gray-500"
           />
@@ -80,6 +82,7 @@ const SignUp = () => {
             type="password"
             placeholder="Password"
             value={password}
+            required
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 mb-4 bg-gray-700 rounded outline-none text-white placeholder-gray-500"
           />

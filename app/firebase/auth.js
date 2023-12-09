@@ -21,20 +21,20 @@ export default function useFirebaseAuth() {
 
   const authStateChanged = async (user) => {
     // user login or logout loading turn on
+    // console.log(" user all the from firbasse/auth cnontext file",user);
     setIsLoading(true);
 
     if (!user) {
       clear();
       return;
     }
-
     // if user sign in then update the states
-
     setAuthUser({
       uid: user.uid,
       email: user.email,
       username: user.displayName,
     });
+   
     setIsLoading(false);
   };
 
@@ -46,6 +46,7 @@ export default function useFirebaseAuth() {
     const unsubscribe = onAuthStateChanged(auth, authStateChanged);
     return () => unsubscribe();
   }, []);
+  console.log(authUser)
 
   return {
     authUser,

@@ -12,12 +12,14 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { authUser, isLoading } = useAuth();
+  const [error, setError] = useState(null);
 
     const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && authUser) {
-      router.push("/"); 
+      // router.push("/"); 
+      console.log("authUser")
     }
   }, [authUser, isLoading]);
 
@@ -38,7 +40,8 @@ const SignIn = () => {
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.error("Error signing up:", errorCode, errorMessage);
+      setError(errorMessage);
+      // console.error("Error signing up:", errorCode, errorMessage);
     }
   };
 
@@ -52,6 +55,7 @@ const SignIn = () => {
             type="email"
             placeholder="Email"
             value={email}
+            required
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 mb-4 bg-gray-700 rounded outline-none text-white placeholder-gray-500"
           />
@@ -59,9 +63,11 @@ const SignIn = () => {
             type="password"
             placeholder="Password"
             value={password}
+            required
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 mb-4 bg-gray-700 rounded outline-none text-white placeholder-gray-500"
           />
+           <p className="text-red-500 text-sm mt-2">{error}</p>
           <button
             onClick={handleSignIn}
             className="w-full p-3 bg-indigo-600 rounded text-white hover:bg-indigo-500"
