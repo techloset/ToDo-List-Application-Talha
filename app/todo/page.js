@@ -23,7 +23,7 @@ const Page = () => {
 
   useEffect(() => {
     if (!isLoading && !authUser) {
-      router.push("/signIn");
+      router.push("/signnIn");
     }
     if (!!authUser) {
       fetchTodos(authUser.uid);
