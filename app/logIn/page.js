@@ -7,7 +7,7 @@ import { auth } from "../firebase/config";
 import { useAuth } from "../firebase/auth";
 // import Loader from "../Component/loader";
 
-const page = () => {
+const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { authUser } = useAuth();
@@ -84,4 +84,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
