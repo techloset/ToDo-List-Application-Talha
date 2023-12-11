@@ -74,7 +74,7 @@ const Page = () => {
         </form>
 
         <p className=" mt-6 text-white">
-          Don't have an account?
+          Dont have an account?
           <Link href="/register">
             <span className="text-sky-400"> Sign up Here</span>
           </Link>
