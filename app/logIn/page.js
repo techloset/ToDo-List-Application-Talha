@@ -5,18 +5,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { auth } from "../firebase/config";
 import { useAuth } from "../firebase/auth";
-import Loader from "../Component/loader";
+// import Loader from "../Component/loader";
 
 const page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { authUser, isLoading } = useAuth();
+  const { authUser } = useAuth();
   const [error, setError] = useState(null);
 
   const router = useRouter();
 
   useEffect(() => {
-    if ( authUser) {
+    if (authUser) {
       router.push("/");
     }
   }, [authUser]);
@@ -31,10 +31,9 @@ const page = () => {
       );
       const user = userCredential.user;
       console.log("User signed up:", user);
-      // sessionStorage.setItem("user", true);
+
       setEmail("");
       setPassword("");
-      router.push("/");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./firebase/auth";
@@ -12,7 +12,7 @@ import {
   getDocs,
   query,
   where,
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
 
 const Page = () => {
@@ -43,7 +43,6 @@ const Page = () => {
           content: todoInput,
         });
         setEditingTodoId(null);
-
       } else {
         // If not editing, add a new todo
         await addDoc(collection(db, "todo"), {
@@ -55,6 +54,7 @@ const Page = () => {
 
       fetchTodos(authUser.uid);
       setTodoInput("");
+      
     } catch (e) {
       console.error("Error adding/updating document: ", e);
     }
@@ -111,7 +111,10 @@ const Page = () => {
 
       {todo.map((item, index) => {
         return (
-          <div key={item.id} className="mt-4 flex items-center  justify-between gap-2">
+          <div
+            key={item.id}
+            className="mt-4 flex items-center  justify-between gap-2"
+          >
             <div className="flex  items-center justify-between w-[100%]">
               <input
                 type="text"
