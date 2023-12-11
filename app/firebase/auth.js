@@ -6,28 +6,28 @@ import { auth } from "./config";
 //created a context
 const AuthUserContext = createContext({
   authUser: null,
-  isLoading: true,
+  // isLoading: false, 
 });
 
 export default function useFirebaseAuth() {
 
   const [authUser, setAuthUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const clear = () => {
     setAuthUser(null);
-    setIsLoading(false);
+    // setIsLoading(false);
   };
 
   const authStateChanged = async (user) => {
-    // user login or logout loading turn on
-    // console.log(" user all the from firbasse/auth cnontext file",user);
-    setIsLoading(true);
+   
+    // setIsLoading(true);
 
     if (!user) {
       clear();
       return;
     }
+    console.log("auth user file" ,user.displayName);
     // if user sign in then update the states
     setAuthUser({
       uid: user.uid,
@@ -35,7 +35,7 @@ export default function useFirebaseAuth() {
       username: user.displayName,
     });
    
-    setIsLoading(false);
+    // setIsLoading(false);
   };
 
   const signOut = () => {
@@ -46,13 +46,12 @@ export default function useFirebaseAuth() {
     const unsubscribe = onAuthStateChanged(auth, authStateChanged);
     return () => unsubscribe();
   }, []);
-  console.log(authUser)
 
   return {
     authUser,
-    isLoading,
-    signOut,
+    // isLoading,
     setAuthUser,
+    signOut,
   };
 }
 
