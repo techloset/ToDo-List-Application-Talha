@@ -49,7 +49,7 @@ const page = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-10 rounded-lg shadow-xl w-96">
-        <h1 className="text-white text-2xl mb-5">SignUp</h1>
+        <h1 className="text-white text-2xl mb-5">Sign Up</h1>
 
         <form onSubmit={(e) => e.preventDefault()}>
           <input
