@@ -29,6 +29,7 @@ const Page = () => {
       fetchTodos(authUser.uid);
     }
   }, [authUser]);
+  
 
   const handleSubmit = async () => {
     try {
@@ -108,12 +109,10 @@ const Page = () => {
           {editingTodoId ? "Update" : "Submit"}
         </button>
       </div>
-      <h1 className="text-3xl font-semibold mb-6 text-white mt-6">
-        Your Todo's{" "}
-      </h1>
-      {/* <p className="text-white text-center mb-4">
-        Logged in as: {authUser ? authUser.displayName : ''}
-      </p> */}
+      <p className="text-3xl font-semibold mb-6 text-white mt-6">
+        {authUser ? authUser.username : ""} Todos
+      </p>
+
       {todo.map((item, index) => (
         <div
           key={item.id}

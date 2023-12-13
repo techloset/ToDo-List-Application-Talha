@@ -13,7 +13,7 @@ export default function useFirebaseAuth() {
   const clear = () => {
     setAuthUser(null);
   };
-
+  
   const authStateChanged = async (user) => {
     if (!user) {
       clear();
@@ -25,6 +25,7 @@ export default function useFirebaseAuth() {
       username: user.displayName,
     });
     
+    // console.log("authuserrrr ", authUser);
   };
 
   const signOut = () => {
