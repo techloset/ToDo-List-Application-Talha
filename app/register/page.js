@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
-import { auth } from "../firebase/config";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useAuth } from "../firebase/auth";
+import { auth } from "../firebase/config";
 
 const Page = () => {
   const [username, setUsername] = useState(null);
@@ -24,12 +24,12 @@ const Page = () => {
   const handleSignUp = async () => {
     if (!email || !password || !username) return;
 
-     // Password validation
-     const hasTwoCapitalLetters = (password.match(/[A-Z]/g) || []).length >= 2;
-     if (!hasTwoCapitalLetters) {
-       setError("Password must contain at least two capital letters.");
-       return;
-     }
+    // Password validation
+    const hasTwoCapitalLetters = (password.match(/[A-Z]/g) || []).length >= 2;
+    if (!hasTwoCapitalLetters) {
+      setError("Password must contain at least two capital letters.");
+      return;
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -46,7 +46,7 @@ const Page = () => {
       setPassword("");
     } catch (error) {
       const errorMessage = error.message;
-     
+
       setError(errorMessage);
     }
   };
