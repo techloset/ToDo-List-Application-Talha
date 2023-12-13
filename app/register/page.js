@@ -37,12 +37,11 @@ const Page = () => {
       setUsername("");
       setEmail("");
       setPassword("");
-      // router.push("/logIn");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
       setError(errorMessage);
-      // console.error("Error signing up:", errorCode, errorMessage);
+      console.error("Error signing up:", errorCode, errorMessage);
     }
   };
 

@@ -1,11 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { auth } from "../firebase/config";
+import { useEffect, useState } from "react";
 import { useAuth } from "../firebase/auth";
-// import Loader from "../Component/loader";
+import { auth } from "../firebase/config";
 
 const Page = () => {
   const [email, setEmail] = useState("");

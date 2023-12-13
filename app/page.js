@@ -18,7 +18,7 @@ import {
 const Page = () => {
   const [todoInput, setTodoInput] = useState("");
   const [todo, setTodo] = useState([]);
-  const { authUser, isLoading, signOut } = useAuth();
+  const { authUser, signOut } = useAuth();
   const router = useRouter();
   const [editingTodoId, setEditingTodoId] = useState(null);
 
