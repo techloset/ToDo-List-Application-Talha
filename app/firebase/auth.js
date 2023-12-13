@@ -24,6 +24,7 @@ export default function useFirebaseAuth() {
       email: user.email,
       username: user.displayName,
     });
+    
   };
 
   const signOut = () => {
