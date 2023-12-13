@@ -29,7 +29,7 @@ const Page = () => {
         email,
         password
       );
-      console.log("userCredential", userCredential);
+      // console.log("userCredential", userCredential);
       await updateProfile(auth.currentUser, {
         displayName: username,
       });

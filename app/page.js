@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "./firebase/auth";
-// import Loader from "./Component/loader";
 import { db } from "./firebase/config";
 import {
   addDoc,

@@ -29,7 +29,7 @@ const Page = () => {
         password
       );
       const user = userCredential.user;
-      console.log("User signed up:", user);
+      // console.log("User signed up:", user);
 
       setEmail("");
       setPassword("");
