@@ -57,7 +57,7 @@ const Page = () => {
       switch (errorCode) {
         // ...
         case "auth/invalid-credential":
-          setError("Invalid password. Please try again.");
+          setError("Invalid email or password. Please try again.");
           break;
         // ...
       }
@@ -76,6 +76,7 @@ const Page = () => {
             type="email"
             placeholder="Email"
             value={email}
+            required
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 mb-4 bg-gray-700 rounded outline-none text-white placeholder-gray-500"
           />
@@ -87,7 +88,7 @@ const Page = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 mb-4 bg-gray-700 rounded outline-none text-white placeholder-gray-500"
           />
-          <p className="text-red-500 text-sm mt-2">{error}</p>
+          <p className="text-red-500 text-sm mt-2 mb-2">{error}</p>
           <button
             onClick={handleSignIn}
             className="w-full p-3 bg-indigo-600 rounded text-white hover:bg-indigo-500"

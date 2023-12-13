@@ -45,10 +45,9 @@ const Page = () => {
       setEmail("");
       setPassword("");
     } catch (error) {
-      const errorCode = error.code;
       const errorMessage = error.message;
+     
       setError(errorMessage);
-      console.error("Error signing up:", errorCode, errorMessage);
     }
   };
 
