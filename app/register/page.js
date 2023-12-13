@@ -23,13 +23,20 @@ const Page = () => {
 
   const handleSignUp = async () => {
     if (!email || !password || !username) return;
+
+     // Password validation
+     const hasTwoCapitalLetters = (password.match(/[A-Z]/g) || []).length >= 2;
+     if (!hasTwoCapitalLetters) {
+       setError("Password must contain at least two capital letters.");
+       return;
+     }
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      // console.log("userCredential", userCredential);
+      console.log("userCredential", userCredential);
       await updateProfile(auth.currentUser, {
         displayName: username,
       });
@@ -75,8 +82,9 @@ const Page = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full p-3 mb-4 bg-gray-700 rounded outline-none text-white placeholder-gray-500"
           />
+          {/* <p>{error}</p> */}
 
-          <p className="text-red-500 text-sm mt-2">{error}</p>
+          <p className="text-red-500 text-sm mt-2 mb-2">{error}</p>
 
           <button
             onClick={handleSignUp}

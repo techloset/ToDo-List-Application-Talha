@@ -22,6 +22,19 @@ const Page = () => {
 
   const handleSignIn = async () => {
     if (!email || !password) return;
+
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    // Password validation
+    const hasTwoCapitalLetters = (password.match(/[A-Z]/g) || []).length >= 2;
+    if (!hasTwoCapitalLetters) {
+      setError("Password must contain at least two capital letters.");
+      return;
+    }
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -33,10 +46,22 @@ const Page = () => {
 
       setEmail("");
       setPassword("");
+      setError(null);
     } catch (error) {
       const errorCode = error.code;
-      const errorMessage = error.message;
+      const errorMessage = error.errorCode;
+      console.log(errorMessage);
       setError(errorMessage);
+
+      // Handle specific error cases
+      switch (errorCode) {
+        // ...
+        case "auth/invalid-credential":
+          setError("Invalid password. Please try again.");
+          break;
+        // ...
+      }
+
       console.error("Error signing up:", errorCode, errorMessage);
     }
   };
@@ -51,7 +76,6 @@ const Page = () => {
             type="email"
             placeholder="Email"
             value={email}
-            required
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-3 mb-4 bg-gray-700 rounded outline-none text-white placeholder-gray-500"
           />
