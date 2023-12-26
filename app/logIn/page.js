@@ -5,20 +5,22 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "../firebase/auth";
 import { auth } from "../firebase/config";
+import Loader from '../component/Loader'
 
 const Page = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { authUser } = useAuth();
-  const [error, setError] = useState(null);
-
   const router = useRouter();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { authUser,isLoading } = useAuth();
+  const [error, setError] = useState(null);
+
+
   useEffect(() => {
-    if (authUser) {
+    if (!isLoading && authUser) {
       router.push("/");
     }
-  }, [authUser]);
+  }, [authUser,isLoading]); 
 
   const handleSignIn = async () => {
     if (!email || !password) return;
@@ -47,6 +49,7 @@ const Page = () => {
       setEmail("");
       setPassword("");
       setError(null);
+
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.errorCode;
@@ -66,7 +69,9 @@ const Page = () => {
     }
   };
 
-  return (
+  return isLoading || (!isLoading && !!authUser) ? (
+    "loading...."
+) : (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-10 rounded-lg shadow-xl w-96">
         <h1 className="text-white text-2xl mb-5">Sign In</h1>

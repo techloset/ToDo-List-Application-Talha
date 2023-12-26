@@ -5,16 +5,24 @@ import { auth } from "./config";
 
 const AuthUserContext = createContext({
   authUser: null,
+  isLoading: true,
 });
+
+()=>{
+  setTimeout(isLoading= false),5000
+}
 
 export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const clear = () => {
     setAuthUser(null);
+    setIsLoading(false);
   };
-  
+
   const authStateChanged = async (user) => {
+    setIsLoading(true);
     if (!user) {
       clear();
       return;
@@ -24,8 +32,8 @@ export default function useFirebaseAuth() {
       email: user.email,
       username: user.displayName,
     });
+    setIsLoading(false);
     
-    // console.log("authuserrrr ", authUser);
   };
 
   const signOut = () => {
@@ -39,6 +47,7 @@ export default function useFirebaseAuth() {
 
   return {
     authUser,
+    isLoading,
     setAuthUser,
     signOut,
   };
